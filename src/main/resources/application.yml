@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: payout-webhook-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payout_workshop
+    username: workshop
+    password: workshop
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Shared secret used to verify inbound PayPal-Transmission-Sig headers.
+# Never commit a real secret here - this is workshop-only.
+webhook:
+  secret: workshop-shared-secret-change-me
+  idempotency-ttl-hours: 24
+
+logging:
+  level:
+    com.paypal.workshop: DEBUG
