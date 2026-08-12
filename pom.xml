@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -94,6 +94,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Rancher Desktop's dockerd doesn't live at the default /var/run/docker.sock -->
+                    <environmentVariables>
+                        <DOCKER_HOST>unix://${user.home}/.rd/docker.sock</DOCKER_HOST>
+                        <!-- Ryuk can't bind-mount the host-side socket path into the Rancher VM; disable it -->
+                        <TESTCONTAINERS_RYUK_DISABLED>true</TESTCONTAINERS_RYUK_DISABLED>
+                    </environmentVariables>
+                    <!-- Docker Engine 29+ (Rancher Desktop) requires min API 1.44; Testcontainers
+                         still falls back to a hardcoded 1.32 default - see testcontainers-java#11212 -->
+                    <systemPropertyVariables>
+                        <api.version>1.44</api.version>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

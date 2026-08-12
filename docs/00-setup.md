@@ -49,6 +49,19 @@ Post a ✅ in the workshop Slack channel once `verify-env.sh` passes with no
 `FAIL` lines. If you see a `WARN` for `gh`/`copilot`, install before the
 session — Workshop 1 previews these but Workshop 2+ uses them hands-on.
 
+## Known issue: Rancher Desktop + Testcontainers
+
+Rancher Desktop ships Docker Engine 29+, which requires a minimum Docker API
+version of 1.44 — but Testcontainers (as of 1.21.x) still falls back to a
+hardcoded 1.32 default and Ryuk (its cleanup sidecar) can't bind-mount
+Rancher Desktop's host-side socket path into its own containers. Both are
+already worked around in this repo's `pom.xml` (`api.version=1.44` system
+property + `TESTCONTAINERS_RYUK_DISABLED=true`) — you don't need to do
+anything extra. If you fork/copy this project elsewhere, keep those two
+surefire settings. See
+[testcontainers-java#11212](https://github.com/testcontainers/testcontainers-java/issues/11212)
+for background.
+
 ## What NOT to do
 
 Even though this is a synthetic lab, do not paste real PayPal secrets,
