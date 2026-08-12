@@ -31,6 +31,7 @@ Then confirm the app itself boots and talks to Postgres/Redis correctly
 ./mvnw spring-boot:run   # separate terminal, leave running
 curl -s http://localhost:8080/actuator/health
 ```
+Or open http://localhost:8080/actuator/health in a browser for a visual check.
 Expect `"status":"UP"` with `db` and `redis` both `UP`. Stop with Ctrl+C, then:
 ```bash
 ./mvnw test

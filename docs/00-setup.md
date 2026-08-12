@@ -58,6 +58,12 @@ In a second terminal:
 curl -s http://localhost:8080/actuator/health | jq .
 ```
 
+Or just open it in your browser (no extra setup needed):
+
+```
+http://localhost:8080/actuator/health
+```
+
 You should see `"status":"UP"` with `db`, `redis`, and `ping` all `UP` too:
 
 ```json

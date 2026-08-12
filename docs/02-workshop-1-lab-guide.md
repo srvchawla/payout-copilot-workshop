@@ -23,6 +23,9 @@ In a second terminal, hit the health endpoint:
 curl -s http://localhost:8080/actuator/health
 ```
 
+Or just open [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
+in your browser for a quick visual check.
+
 You should see `"status":"UP"` with `db` and `redis` both `UP` - this confirms
 Postgres, Redis, and the app itself are all wired up correctly *before* you
 touch any code. Stop the app (Ctrl+C) once confirmed, then run the test suite:

@@ -36,6 +36,7 @@ Verify the app itself boots before touching any code:
 ./mvnw spring-boot:run           # separate terminal, leave running
 curl -s http://localhost:8080/actuator/health   # expect "status":"UP"
 ```
+Or open http://localhost:8080/actuator/health directly in a browser.
 
 Then run the test suite:
 ```bash
