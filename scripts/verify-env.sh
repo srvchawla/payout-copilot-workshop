@@ -6,8 +6,9 @@ pass() { echo "OK   - $1"; }
 fail() { echo "FAIL - $1"; exit 1; }
 
 command -v java >/dev/null 2>&1 || fail "java not found on PATH"
-JAVA_VERSION=$(java -version 2>&1 | head -1 | grep -oE '"[0-9]+' | tr -d '"')
-[[ "$JAVA_VERSION" -ge 17 ]] && pass "Java $JAVA_VERSION found" || fail "Java 17+ required, found $JAVA_VERSION"
+JAVA_VERSION_RAW=$(java -version 2>&1 | head -1)
+JAVA_VERSION=$(echo "$JAVA_VERSION_RAW" | grep -oE '"[0-9]+' | tr -d '"')
+[[ "$JAVA_VERSION" -ge 17 ]] && pass "Java $JAVA_VERSION found" || fail "Java 17+ required, found: $JAVA_VERSION_RAW"
 
 command -v docker >/dev/null 2>&1 || fail "docker CLI not found (expected via Rancher Desktop)"
 docker version >/dev/null 2>&1 || fail "docker daemon not reachable - is Rancher Desktop running with dockerd engine?"
