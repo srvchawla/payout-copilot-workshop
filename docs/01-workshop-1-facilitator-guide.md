@@ -23,6 +23,16 @@ Have everyone run, in order:
 ```bash
 ./scripts/verify-env.sh
 ./scripts/dev-up.sh
+```
+
+Then confirm the app itself boots and talks to Postgres/Redis correctly
+*before* touching any code:
+```bash
+./mvnw spring-boot:run   # separate terminal, leave running
+curl -s http://localhost:8080/actuator/health
+```
+Expect `"status":"UP"` with `db` and `redis` both `UP`. Stop with Ctrl+C, then:
+```bash
 ./mvnw test
 ```
 `test` should FAIL — that's expected (`webhook`/`ledger` classes throw

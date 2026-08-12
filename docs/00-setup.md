@@ -45,6 +45,35 @@ cd paypal-copilot-workshop
 ./scripts/verify-env.sh
 ```
 
+## 6. Verify the app itself boots (before touching any code)
+
+```bash
+./scripts/dev-up.sh          # starts Postgres + Redis
+./mvnw spring-boot:run       # leave this running in its own terminal
+```
+
+In a second terminal:
+
+```bash
+curl -s http://localhost:8080/actuator/health | jq .
+```
+
+You should see `"status":"UP"` with `db`, `redis`, and `ping` all `UP` too:
+
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": { "status": "UP" },
+    "ping": { "status": "UP" },
+    "redis": { "status": "UP" }
+  }
+}
+```
+
+Stop the app with Ctrl+C once confirmed. If `db` or `redis` show `DOWN`, re-run
+`./scripts/dev-up.sh` and check `docker ps` shows both containers healthy.
+
 Post a ✅ in the workshop Slack channel once `verify-env.sh` passes with no
 `FAIL` lines. If you see a `WARN` for `gh`/`copilot`, install before the
 session — Workshop 1 previews these but Workshop 2+ uses them hands-on.

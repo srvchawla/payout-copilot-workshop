@@ -29,6 +29,16 @@ checklist.
 ```bash
 ./scripts/verify-env.sh   # confirms Java/Docker/Copilot CLI are ready
 ./scripts/dev-up.sh       # starts Postgres + Redis
+```
+
+Verify the app itself boots before touching any code:
+```bash
+./mvnw spring-boot:run           # separate terminal, leave running
+curl -s http://localhost:8080/actuator/health   # expect "status":"UP"
+```
+
+Then run the test suite:
+```bash
 ./mvnw test               # expect RED: webhook/ledger classes are TODO stubs
 ```
 
