@@ -1,6 +1,8 @@
 spring:
   application:
     name: payout-webhook-service
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
   datasource:
     url: jdbc:postgresql://localhost:5432/payout_workshop
     username: workshop
@@ -13,6 +15,9 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+server:
+  shutdown: graceful
 
 management:
   endpoints:

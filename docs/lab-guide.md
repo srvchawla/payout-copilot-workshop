@@ -11,13 +11,7 @@ green.
 ./scripts/dev-up.sh
 ```
 
-Start the app in one terminal and leave it running:
-
-```bash
-./mvnw spring-boot:run
-```
-
-In a second terminal, hit the health endpoint:
+Check the health endpoint:
 
 ```bash
 curl -s http://localhost:8080/actuator/health
@@ -28,14 +22,17 @@ in your browser for a quick visual check.
 
 You should see `"status":"UP"` with `db` and `redis` both `UP` - this confirms
 Postgres, Redis, and the app itself are all wired up correctly *before* you
-touch any code. Stop the app (Ctrl+C) once confirmed, then run the test suite:
+touch any code. Then run the test suite:
 
 ```bash
 ./mvnw test
 ```
 
-When you finish working, stop the app with Ctrl+C and clean up the local
-services:
+If a managed service goes down, rerun `./scripts/dev-up.sh`. The script keeps
+healthy services running and recovers missing ones. If Spring Boot cannot
+start, inspect `.run/payout-service.log`.
+
+When you finish working, stop all managed services gracefully:
 
 ```bash
 ./scripts/dev-down.sh
