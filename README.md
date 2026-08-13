@@ -36,48 +36,35 @@ Run the repository readiness check after cloning:
 See [`docs/`](docs) for the facilitator guide, student lab guide, and setup
 checklist.
 
-## Copilot Concepts Taught
+## Student Lab Path
 
-Mark an item complete by changing `[ ]` to `[x]` in this file as you walk
-through the lab.
+Mark an item complete by changing `[ ]` to `[x]` in this file. The `main`
+branch is the student starting point; the `solution` branch is a facilitator
+reference.
 
-- [ ] Plan the webhook flow with **Plan Mode**: define the files, boundaries,
-  and risks before coding.
-- [ ] Apply webhook guardrails with **Custom Instructions**: enforce signature
-  verification, atomic idempotency, and safe logging conventions.
-- [ ] Implement the webhook with **Agent Mode in the IDE**: build and test the
-  multi-file feature from the executable specification.
-- [ ] Repair a seeded race condition with **Agent Mode for debugging**:
-  reproduce duplicate processing and fix it with a concurrent test.
-- [ ] Diagnose failed resilience tests with **Copilot CLI**: investigate logs
-  and make targeted fixes from the terminal.
-- [ ] Extend the compliance rules engine with **reusable prompts and custom
-  agents**: coordinate a larger feature across packages and tests.
-- [ ] Deliver a reconciliation feature with **Copilot Cloud Agent**: turn a
-  GitHub issue into a pull request with tests.
-- [ ] Review the pull request with **Copilot Code Review**: catch security,
-  correctness, and test-coverage gaps.
-
-## Exercise Map
-
-### Confirm the environment
+### [ ] 1. Verify the environment
 
 **Open:** [`scripts/verify-env.sh`](scripts/verify-env.sh),
 [`docker-compose.yml`](docker-compose.yml), and
 [`src/main/resources/application.yml`](src/main/resources/application.yml).
 
-**Look for:** Java, Docker, PostgreSQL, Redis, and the application
-configuration being available.
+Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`. Start the service
+with `./mvnw spring-boot:run` and open
+[http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
 
-### Read the executable specification
+**Done when:** the application, PostgreSQL, and Redis report `UP`.
+
+### [ ] 2. Read the executable specification
 
 **Open:** [`WebhookControllerTest.java`](src/test/java/com/payout/workshop/payout/webhook/WebhookControllerTest.java).
 
-**Look for:** the four tests defining invalid-signature rejection, successful
-crediting, FX conversion, and duplicate-delivery behavior. Do not edit this
-file during the lab.
+Run `./mvnw test` and observe the intentional RED state. Read the four tests:
+invalid-signature rejection, successful crediting, FX conversion, and
+duplicate delivery. Do not edit the test file.
 
-### Plan the implementation
+**Done when:** you can explain what each test expects before writing code.
+
+### [ ] 3. Plan the implementation with Plan Mode
 
 **Open:** [`WebhookController.java`](src/main/java/com/payout/workshop/payout/webhook/WebhookController.java),
 [`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java),
@@ -85,58 +72,48 @@ file during the lab.
 [`PayoutEventListener.java`](src/main/java/com/payout/workshop/payout/webhook/PayoutEventListener.java),
 and [`LedgerService.java`](src/main/java/com/payout/workshop/payout/ledger/LedgerService.java).
 
-**Look for:** the `TODO(workshop)` blocks describing the contracts Copilot
-must implement.
+Use **Plan Mode** to propose the implementation sequence and identify risks
+before allowing code changes. Focus on the `TODO(workshop)` contracts.
 
-### Apply the guardrails
+**Done when:** the plan explains the signature check, atomic Redis lock,
+asynchronous boundary, and ledger conversion flow.
+
+### [ ] 4. Apply the repository guardrails
 
 **Open:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
 and [`.github/instructions/payout-webhook.instructions.md`](.github/instructions/payout-webhook.instructions.md).
 
-**Look for:** repository-wide conventions and path-specific webhook security
-rules that should shape Copilot's suggestions automatically.
+Review how repository-wide conventions and path-specific webhook security rules
+shape Copilot's suggestions. This is the **Custom Instructions** exercise.
 
-### Implement and validate the webhook
+**Done when:** you know which rules apply automatically to the webhook files.
 
-**Open:** the five TODO files listed in the planning step, then run
-`./mvnw test`.
+### [ ] 5. Implement and test with Agent Mode
 
-**Look for:** signature verification before parsing, one atomic Redis
-idempotency operation, asynchronous event handling, and currency conversion
-using `BigDecimal`.
+Use **Agent Mode in the IDE** to implement the five TODO files without changing
+the tests. Ask it to run `./mvnw test` as it iterates.
 
-### Investigate a seeded defect
+**Done when:** all tests pass and the implementation verifies signatures before
+parsing, uses one atomic Redis idempotency operation, handles events
+asynchronously, and uses `BigDecimal` for money.
 
-**Open:** [`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java)
+### [ ] 6. Debug a seeded defect
+
+Use **Agent Mode for debugging** with either
+[`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java)
 or [`IdempotencyService.java`](src/main/java/com/payout/workshop/payout/webhook/IdempotencyService.java).
+Introduce a timing-safe comparison defect or a check-then-set race, then ask
+Copilot to reproduce it, add a regression test, and repair it.
 
-**Look for:** Agent Mode reproducing a timing-safe comparison issue or a
-check-then-set race, adding a regression test, and repairing the defect.
+**Done when:** the regression test fails against the defect and passes after
+the repair.
 
-## Developer Walk-Through
+### Optional follow-up capabilities
 
-Follow this sequence in order. The branch named `main` is the student starting
-point; the `solution` branch is a facilitator reference after the exercise.
-
-1. Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`.
-2. Start the service with `./mvnw spring-boot:run` and open
-  [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
-  Continue only when the application, PostgreSQL, and Redis report `UP`.
-3. Run `./mvnw test` and observe the intentional RED state from the TODO
-  implementations.
-4. Read `WebhookControllerTest.java` and list the behavior each test requires.
-5. Use **Plan Mode** to propose the implementation sequence and challenge its
-  risks before allowing code changes.
-6. Open the two instruction files and confirm which rules apply to webhook
-  classes.
-7. Use **Agent Mode** to implement the TODOs without changing the tests.
-8. Re-run `./mvnw test` until all tests pass, reviewing the generated diff as
-  you go.
-9. Introduce one seeded defect, use Agent Mode to reproduce it, and verify the
-  regression test before accepting the fix.
-10. Use the remaining Copilot capabilities when they fit the session: Copilot
-   CLI for terminal investigation, Cloud Agent for an issue-to-PR task, and
-   Copilot Code Review for the resulting pull request.
+Use these when they fit the session rather than treating them as required
+steps: **Copilot CLI** for terminal investigation, **reusable prompts and
+custom agents** for larger features, **Copilot Cloud Agent** for an issue-to-PR
+task, and **Copilot Code Review** for the resulting pull request.
 
 ## Stack
 
