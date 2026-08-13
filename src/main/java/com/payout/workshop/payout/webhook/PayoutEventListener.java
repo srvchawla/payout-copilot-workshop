@@ -1,6 +1,6 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
-import com.paypal.workshop.payout.ledger.LedgerService;
+import com.payout.workshop.payout.ledger.LedgerService;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

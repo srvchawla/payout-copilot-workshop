@@ -1,4 +1,4 @@
-package com.paypal.workshop.payout;
+package com.payout.workshop.payout;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

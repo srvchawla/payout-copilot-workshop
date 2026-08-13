@@ -1,4 +1,4 @@
-package com.paypal.workshop.payout.fx;
+package com.payout.workshop.payout.fx;
 
 import org.springframework.stereotype.Component;
 

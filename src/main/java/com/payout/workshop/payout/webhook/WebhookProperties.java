@@ -1,4 +1,4 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

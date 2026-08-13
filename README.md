@@ -1,8 +1,8 @@
-# PayPal Copilot Workshop — Payout Webhook Service
+# payout Copilot Workshop — Payout Webhook Service
 
 A hands-on, 4-part GitHub Copilot workshop series for backend engineers
 (Java 17 / Spring Boot 3) built around a realistic scenario: ingesting
-PayPal-style payout status webhooks securely and idempotently.
+payout-style payout status webhooks securely and idempotently.
 
 ## Series Map
 
@@ -22,7 +22,7 @@ checklist.
 - Postgres + Redis via `docker-compose.yml`, run through **Rancher Desktop**
   with the **`dockerd` (moby)** container engine
 - Testcontainers-backed integration tests (the tests ARE the spec — see
-  [`WebhookControllerTest`](src/test/java/com/paypal/workshop/payout/webhook/WebhookControllerTest.java))
+  [`WebhookControllerTest`](src/test/java/com/payout/workshop/payout/webhook/WebhookControllerTest.java))
 
 ## Quick Start
 
@@ -50,13 +50,13 @@ Instructions, and Agent Mode — see
 ## Repo Layout
 
 ```
-src/main/java/com/paypal/workshop/payout/
+src/main/java/com/payout/workshop/payout/
   webhook/   WebhookController, SignatureVerifier, IdempotencyService, PayoutEventListener  (TODO stubs — the lab)
   ledger/    AccountBalance, AccountRepository, LedgerService                                (LedgerService is a TODO stub)
   fx/        ConversionService                                                               (fully implemented stub, not the lesson)
 .github/
   copilot-instructions.md                    repo-wide conventions
-  instructions/paypal-webhook.instructions.md path-scoped security/idempotency rules
+  instructions/payout-webhook.instructions.md path-scoped security/idempotency rules
 docs/
   00-setup.md                    pre-work checklist sent to attendees
   01-workshop-1-facilitator-guide.md   run-of-show, timing, prompts, debug injection

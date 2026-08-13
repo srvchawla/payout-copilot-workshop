@@ -1,7 +1,7 @@
 # Repository Instructions — Payout Webhook Service
 
 This is a **Java 17 / Spring Boot 3** backend service used for a GitHub Copilot
-workshop series. It models a PayPal-style payout ledger that ingests
+workshop series. It models a payout-style payout ledger that ingests
 asynchronous webhook status updates.
 
 ## Conventions

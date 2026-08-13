@@ -1,12 +1,12 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
 import org.springframework.stereotype.Component;
 
 /**
  * LAB TASK (Tier 1): implement HMAC-SHA256 verification of the raw webhook body
- * against the `PayPal-Transmission-Sig` header, using WebhookProperties#getSecret().
+ * against the `Payout-Transmission-Sig` header, using WebhookProperties#getSecret().
  *
- * Requirements (see .github/instructions/paypal-webhook.instructions.md):
+ * Requirements (see .github/instructions/payout-webhook.instructions.md):
  *  - Use HMAC-SHA256 over the exact raw request body bytes.
  *  - Compare digests using a constant-time comparison (MessageDigest.isEqual),
  *    never String#equals or Arrays.equals.

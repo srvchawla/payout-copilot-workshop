@@ -1,6 +1,6 @@
-package com.paypal.workshop.payout.ledger;
+package com.payout.workshop.payout.ledger;
 
-import com.paypal.workshop.payout.fx.ConversionService;
+import com.payout.workshop.payout.fx.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

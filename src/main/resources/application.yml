@@ -23,7 +23,7 @@ management:
     health:
       show-details: always
 
-# Shared secret used to verify inbound PayPal-Transmission-Sig headers.
+# Shared secret used to verify inbound Payout-Transmission-Sig headers.
 # Never commit a real secret here - this is workshop-only.
 webhook:
   secret: workshop-shared-secret-change-me
@@ -31,4 +31,4 @@ webhook:
 
 logging:
   level:
-    com.paypal.workshop: DEBUG
+    com.payout.workshop: DEBUG

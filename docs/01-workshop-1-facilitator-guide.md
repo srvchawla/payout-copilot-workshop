@@ -69,7 +69,7 @@ moment — reinforce that Plan Mode output should be read, not rubber-stamped.
 
 ## 0:35–0:40 — Custom Instructions
 
-Open `.github/instructions/paypal-webhook.instructions.md` on screen. Explain
+Open `.github/instructions/payout-webhook.instructions.md` on screen. Explain
 `applyTo` scoping — this file only auto-applies to `*Webhook*.java` and files
 under `webhook/`. Ask: why doesn't it also cover `LedgerService`? (Answer:
 it's ledger/FX correctness, not webhook security — a good moment to discuss
@@ -120,7 +120,7 @@ setIfAbsent call.
 ```
 Then:
 ```
-This webhook occasionally double-credits a payout when PayPal redelivers the
+This webhook occasionally double-credits a payout when payout redelivers the
 same event within milliseconds of the first delivery. Write a test that fires
 two concurrent requests with the same payload, reproduce the bug, and fix it.
 ```

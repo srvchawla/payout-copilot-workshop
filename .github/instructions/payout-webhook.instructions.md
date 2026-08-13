@@ -3,7 +3,7 @@ applyTo: "**/*Webhook*.java,**/webhook/**/*.java"
 ---
 # Webhook Security & Idempotency Standards
 
-- Never accept a webhook payload without verifying the `PayPal-Transmission-Sig`
+- Never accept a webhook payload without verifying the `Payout-Transmission-Sig`
   header using HMAC-SHA256 over the raw request body against the configured
   shared secret (`WebhookProperties#getSecret()`). Reject with HTTP 401 if
   verification fails or the header is missing/blank.

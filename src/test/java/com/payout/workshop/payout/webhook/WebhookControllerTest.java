@@ -1,8 +1,8 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paypal.workshop.payout.ledger.AccountBalance;
-import com.paypal.workshop.payout.ledger.AccountRepository;
+import com.payout.workshop.payout.ledger.AccountBalance;
+import com.payout.workshop.payout.ledger.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ class WebhookControllerTest {
         String body = payload("evt-bad-sig", "acct-usd-1", "25.00", "USD");
 
         mockMvc.perform(post("/webhooks/payout-status")
-                        .header("PayPal-Transmission-Sig", "not-a-real-signature")
+                        .header("Payout-Transmission-Sig", "not-a-real-signature")
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isUnauthorized());
@@ -90,7 +90,7 @@ class WebhookControllerTest {
         String body = payload(eventId, "acct-usd-1", "25.00", "USD");
 
         mockMvc.perform(post("/webhooks/payout-status")
-                        .header("PayPal-Transmission-Sig", sign(body))
+                        .header("Payout-Transmission-Sig", sign(body))
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isOk());
@@ -108,7 +108,7 @@ class WebhookControllerTest {
         String body = payload(eventId, "acct-eur-1", "10.00", "USD");
 
         mockMvc.perform(post("/webhooks/payout-status")
-                        .header("PayPal-Transmission-Sig", sign(body))
+                        .header("Payout-Transmission-Sig", sign(body))
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isOk());
@@ -125,10 +125,10 @@ class WebhookControllerTest {
         String body = payload(eventId, "acct-usd-1", "25.00", "USD");
         String signature = sign(body);
 
-        // Simulate PayPal redelivering the same event twice in quick succession.
+        // Simulate payout redelivering the same event twice in quick succession.
         for (int i = 0; i < 2; i++) {
             mockMvc.perform(post("/webhooks/payout-status")
-                            .header("PayPal-Transmission-Sig", signature)
+                            .header("Payout-Transmission-Sig", signature)
                             .contentType("application/json")
                             .content(body))
                     .andExpect(status().isOk());

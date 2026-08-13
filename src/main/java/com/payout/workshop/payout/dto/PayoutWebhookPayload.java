@@ -1,10 +1,10 @@
-package com.paypal.workshop.payout.dto;
+package com.payout.workshop.payout.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
- * Wire shape of a PayPal payout status webhook.
+ * Wire shape of a payout payout status webhook.
  * status is expected to be one of: PENDING, COMPLETED, FAILED.
  */
 public record PayoutWebhookPayload(

@@ -1,4 +1,4 @@
-package com.paypal.workshop.payout.ledger;
+package com.payout.workshop.payout.ledger;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

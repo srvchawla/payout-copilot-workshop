@@ -1,4 +1,4 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

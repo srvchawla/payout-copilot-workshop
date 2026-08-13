@@ -40,7 +40,7 @@ throw `UnsupportedOperationException`. That's your starting point.
 
 ## 1. Read the spec (it's the test file)
 
-Open [`WebhookControllerTest`](../src/test/java/com/paypal/workshop/payout/webhook/WebhookControllerTest.java).
+Open [`WebhookControllerTest`](../src/test/java/com/payout/workshop/payout/webhook/WebhookControllerTest.java).
 Don't edit it. It defines exactly what "done" means:
 
 - `rejectsRequestWithInvalidSignature`
@@ -63,7 +63,7 @@ Ask follow-up questions in Plan Mode before letting anything touch code.
 
 ## 3. Look at the guardrails already in the repo
 
-Open [`.github/instructions/paypal-webhook.instructions.md`](../.github/instructions/paypal-webhook.instructions.md).
+Open [`.github/instructions/payout-webhook.instructions.md`](../.github/instructions/payout-webhook.instructions.md).
 This applies automatically to files matching `**/*Webhook*.java` and
 `**/webhook/**/*.java` — you don't have to repeat these rules in your prompts.
 
@@ -109,7 +109,7 @@ setIfAbsent call.
 ```
 Then:
 ```
-This webhook occasionally double-credits a payout when PayPal redelivers the
+This webhook occasionally double-credits a payout when payout redelivers the
 same event within milliseconds of the first delivery. Write a test that fires
 two concurrent requests with the same payload, reproduce the bug, and fix it.
 ```

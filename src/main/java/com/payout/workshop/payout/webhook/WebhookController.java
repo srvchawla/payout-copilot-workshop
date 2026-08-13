@@ -1,7 +1,7 @@
-package com.paypal.workshop.payout.webhook;
+package com.payout.workshop.payout.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paypal.workshop.payout.dto.PayoutWebhookPayload;
+import com.payout.workshop.payout.dto.PayoutWebhookPayload;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +40,7 @@ public class WebhookController {
 
     @PostMapping("/webhooks/payout-status")
     public ResponseEntity<Void> receivePayoutStatus(
-            @RequestHeader(value = "PayPal-Transmission-Sig", required = false) String signature,
+            @RequestHeader(value = "Payout-Transmission-Sig", required = false) String signature,
             @RequestBody String rawBody) throws Exception {
         throw new UnsupportedOperationException(
                 "TODO(workshop): implement the webhook ingestion flow described above");

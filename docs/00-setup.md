@@ -26,7 +26,7 @@ java -version    # must report 17 or higher (Temurin recommended)
 ## 3. VS Code + Copilot
 
 - Install the **GitHub Copilot** and **GitHub Copilot Chat** extensions.
-- Sign in with your PayPal GitHub org account and confirm you have an active
+- Sign in with your payout GitHub org account and confirm you have an active
   Copilot Business/Enterprise seat.
 
 ## 4. GitHub Copilot CLI
@@ -40,8 +40,8 @@ copilot --version
 ## 5. Clone the repo & self-check
 
 ```bash
-git clone <this-repo-url> paypal-copilot-workshop
-cd paypal-copilot-workshop
+git clone <this-repo-url> payout-copilot-workshop
+cd payout-copilot-workshop
 ./scripts/verify-env.sh
 ```
 
@@ -99,6 +99,6 @@ for background.
 
 ## What NOT to do
 
-Even though this is a synthetic lab, do not paste real PayPal secrets,
+Even though this is a synthetic lab, do not paste real payout secrets,
 production credentials, or real customer data into Copilot Chat at any point
 — treat this repo like any other PCI-adjacent codebase.
