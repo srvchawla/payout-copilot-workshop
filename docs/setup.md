@@ -77,8 +77,10 @@ You should see `"status":"UP"` with `db`, `redis`, and `ping` all `UP` too:
 }
 ```
 
-Stop the app with Ctrl+C once confirmed. If `db` or `redis` show `DOWN`, re-run
-`./scripts/dev-up.sh` and check `docker ps` shows both containers healthy.
+Stop the app with Ctrl+C once confirmed, then run `./scripts/dev-down.sh` to
+stop this repository's Postgres and Redis services. If `db` or `redis` show
+`DOWN`, re-run `./scripts/dev-up.sh` and check `docker ps` shows both
+containers healthy.
 
 Post a ✅ in the workshop Slack channel once `verify-env.sh` passes with no
 `FAIL` lines. If you see a `WARN` for `gh`/`copilot`, install before the
