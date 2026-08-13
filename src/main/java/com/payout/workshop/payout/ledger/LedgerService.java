@@ -27,7 +27,11 @@ public class LedgerService {
     }
 
     public void creditAccount(String accountId, BigDecimal amount, String payoutCurrency) {
-        throw new UnsupportedOperationException(
-                "TODO(workshop): convert currency if needed and credit the account balance");
+        AccountBalance account = accountRepository.findByAccountId(accountId)
+            .orElseThrow(() -> new IllegalArgumentException("Account not found: " + accountId));
+        BigDecimal convertedAmount = conversionService.convert(
+            amount, payoutCurrency, account.getCurrency());
+        account.credit(convertedAmount);
+        accountRepository.save(account);
     }
 }

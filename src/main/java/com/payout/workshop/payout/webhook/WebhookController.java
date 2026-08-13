@@ -42,7 +42,14 @@ public class WebhookController {
     public ResponseEntity<Void> receivePayoutStatus(
             @RequestHeader(value = "Payout-Transmission-Sig", required = false) String signature,
             @RequestBody String rawBody) throws Exception {
-        throw new UnsupportedOperationException(
-                "TODO(workshop): implement the webhook ingestion flow described above");
+        if (!signatureVerifier.verify(rawBody, signature)) {
+            return ResponseEntity.status(401).build();
+        }
+
+        PayoutWebhookPayload payload = objectMapper.readValue(rawBody, PayoutWebhookPayload.class);
+        if (idempotencyService.tryAcquire(payload.eventId())) {
+            eventPublisher.publishEvent(new PayoutStatusReceivedEvent(payload));
+        }
+        return ResponseEntity.ok().build();
     }
 }

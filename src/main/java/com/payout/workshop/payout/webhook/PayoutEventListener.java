@@ -26,7 +26,9 @@ public class PayoutEventListener {
     @Async
     @EventListener
     public void onPayoutStatusReceived(PayoutStatusReceivedEvent event) {
-        throw new UnsupportedOperationException(
-                "TODO(workshop): apply the balance update for COMPLETED payouts");
+        var payload = event.payload();
+        if ("COMPLETED".equals(payload.status())) {
+            ledgerService.creditAccount(payload.accountId(), payload.amount(), payload.currency());
+        }
     }
 }
