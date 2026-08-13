@@ -142,6 +142,12 @@ Then run the test suite:
 ./mvnw test               # expect RED: webhook/ledger classes are TODO stubs
 ```
 
+When finished, stop the app with Ctrl+C and shut down the local services:
+
+```bash
+./scripts/dev-down.sh     # stops this repo's Postgres + Redis services
+```
+
 The lab is to make `./mvnw test` pass using Copilot Plan Mode, Custom
 Instructions, and Agent Mode — see
 [`docs/lab-guide.md`](docs/lab-guide.md).

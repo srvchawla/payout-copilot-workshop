@@ -36,6 +36,8 @@ Expect `"status":"UP"` with `db` and `redis` both `UP`. Stop with Ctrl+C, then:
 ```bash
 ./mvnw test
 ```
+At the end of the session, stop the app with Ctrl+C and run
+`./scripts/dev-down.sh` to clean up only this repository's local services.
 `test` should FAIL — that's expected (`webhook`/`ledger` classes throw
 `UnsupportedOperationException`). This is the RED state the lab starts from.
 Anyone still failing `verify-env.sh` pairs up with a neighbor rather than

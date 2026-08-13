@@ -1,4 +1,4 @@
-# Student Lab Guide
+# Lab Exercise Guide
 
 Goal: implement a secure, idempotent payout webhook endpoint using Copilot
 Plan Mode, Custom Instructions, and Agent Mode — until `./mvnw test` is fully
@@ -32,6 +32,13 @@ touch any code. Stop the app (Ctrl+C) once confirmed, then run the test suite:
 
 ```bash
 ./mvnw test
+```
+
+When you finish working, stop the app with Ctrl+C and clean up the local
+services:
+
+```bash
+./scripts/dev-down.sh
 ```
 
 You should see failures — `SignatureVerifier`, `IdempotencyService`,
