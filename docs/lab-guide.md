@@ -1,4 +1,4 @@
-# Workshop 1 — Student Lab Guide
+# Student Lab Guide
 
 Goal: implement a secure, idempotent payout webhook endpoint using Copilot
 Plan Mode, Custom Instructions, and Agent Mode — until `./mvnw test` is fully

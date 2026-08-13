@@ -1,4 +1,4 @@
-# Workshop 1 — Facilitator Guide (90 min)
+# Facilitator Guide (90 min)
 
 **Scenario**: a marketplace triggers a payout status webhook
 (`PENDING → COMPLETED`). The service must verify the signature, apply FX
@@ -15,7 +15,7 @@ conversion if needed, and update the balance idempotently.
 | 0:40–0:65 | Agent Mode hands-on lab (make `./mvnw test` pass) |
 | 0:65–0:80 | Agent Mode debugging lab (seeded bug) |
 | 0:80–0:88 | Recap + preview of CLI / coding agent / code review agent |
-| 0:88–0:90 | Feedback + Workshop 2 pre-work |
+| 0:88–0:90 | Feedback + discussion of follow-up topics |
 
 ## 0:00–0:10 — Environment Check
 
@@ -133,16 +133,16 @@ code review + tests catch what looks like reasonable code.
 
 Preview only (no hands-on yet):
 - **Copilot CLI** (`copilot` in the terminal) — triaging failing CI logs,
-  scripting, git operations without opening the IDE. (Workshop 2)
+  scripting, git operations without opening the IDE.
 - **Copilot coding agent (cloud)** — assign a GitHub issue to Copilot, it
-  opens a PR autonomously. (Workshop 4)
+  opens a PR autonomously.
 - **Copilot Code Review** — request Copilot as a PR reviewer on the branch
   they just built; walk through inline comments live if time allows.
 
 ## 0:88–0:90 — Feedback
 
-Quick pulse check + written feedback form. Send Workshop 2 pre-work
-(FX resilience / Resilience4j reading) same day.
+Quick pulse check + written feedback form. Share any follow-up reading
+(such as FX resilience / Resilience4j) after the session if needed.
 
 ## Facilitator Safety Notes
 

@@ -1,4 +1,4 @@
-# Workshop 1 — Pre-Work Setup Checklist
+# Pre-Work Setup Checklist
 
 Send this 3–5 days before the session. Do not use session time for installs.
 
@@ -82,7 +82,8 @@ Stop the app with Ctrl+C once confirmed. If `db` or `redis` show `DOWN`, re-run
 
 Post a ✅ in the workshop Slack channel once `verify-env.sh` passes with no
 `FAIL` lines. If you see a `WARN` for `gh`/`copilot`, install before the
-session — Workshop 1 previews these but Workshop 2+ uses them hands-on.
+session — the CLI and GitHub workflow capabilities can be introduced when they
+fit the session plan.
 
 ## Known issue: Rancher Desktop + Testcontainers
 
