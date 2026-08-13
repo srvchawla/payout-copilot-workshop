@@ -1,6 +1,6 @@
 # Payout Copilot Workshop — Payout Webhook Service
 
-A hands-on, 4-part GitHub Copilot workshop series for backend engineers
+A hands-on GitHub Copilot workshop for backend engineers
 (Java 17 / Spring Boot 3) built around a realistic scenario: ingesting payout
 status webhooks securely and idempotently.
 
@@ -26,14 +26,12 @@ Run the repository readiness check after cloning:
 ./scripts/verify-env.sh
 ```
 
-## Series Map
+## Learning Topics
 
-| # | Theme | Status |
-|---|---|---|
-| 1 | Foundations + secure/idempotent webhook ingestion | **This repo, ready to run** |
-| 2 | Async processing, FX resilience, retries | Planned |
-| 3 | Compliance rules engine (larger multi-file Agent Mode task) | Planned |
-| 4 | Team workflow at scale: Copilot Cloud Agent + Copilot Code Review | Planned |
+- Secure and idempotent webhook ingestion
+- Async processing, currency conversion, resilience, and retries
+- Compliance rules and larger multi-file Agent Mode tasks
+- GitHub workflow with Copilot Cloud Agent and Copilot Code Review
 
 See [`docs/`](docs) for the facilitator guide, student lab guide, and setup
 checklist.
@@ -42,14 +40,14 @@ checklist.
 
 | Exercise | Backend outcome | Copilot capability |
 |---|---|---|
-| Workshop 1: Plan the webhook flow | Define the files, boundaries, and risks before coding | **Plan Mode** |
-| Workshop 1: Apply webhook guardrails | Enforce signature verification, atomic idempotency, and safe logging conventions | **Custom Instructions** |
-| Workshop 1: Implement the webhook | Build and test the multi-file feature from the executable specification | **Agent Mode in the IDE** |
-| Workshop 1: Repair a seeded race condition | Reproduce duplicate processing and fix it with a concurrent test | **Agent Mode for debugging** |
-| Workshop 2: Diagnose failed resilience tests | Investigate logs and make targeted fixes from the terminal | **Copilot CLI** |
-| Workshop 3: Extend the compliance rules engine | Coordinate a larger feature across packages and tests | **Reusable prompts and custom agents** |
-| Workshop 4: Deliver a reconciliation feature | Turn a GitHub issue into a pull request with tests | **Copilot Cloud Agent** |
-| Workshop 4: Review the pull request | Catch security, correctness, and test-coverage gaps | **Copilot Code Review** |
+| Plan the webhook flow | Define the files, boundaries, and risks before coding | **Plan Mode** |
+| Apply webhook guardrails | Enforce signature verification, atomic idempotency, and safe logging conventions | **Custom Instructions** |
+| Implement the webhook | Build and test the multi-file feature from the executable specification | **Agent Mode in the IDE** |
+| Repair a seeded race condition | Reproduce duplicate processing and fix it with a concurrent test | **Agent Mode for debugging** |
+| Diagnose failed resilience tests | Investigate logs and make targeted fixes from the terminal | **Copilot CLI** |
+| Extend the compliance rules engine | Coordinate a larger feature across packages and tests | **Reusable prompts and custom agents** |
+| Deliver a reconciliation feature | Turn a GitHub issue into a pull request with tests | **Copilot Cloud Agent** |
+| Review the pull request | Catch security, correctness, and test-coverage gaps | **Copilot Code Review** |
 
 ## Stack
 
@@ -80,7 +78,7 @@ Then run the test suite:
 
 The lab is to make `./mvnw test` pass using Copilot Plan Mode, Custom
 Instructions, and Agent Mode — see
-[`docs/02-workshop-1-lab-guide.md`](docs/02-workshop-1-lab-guide.md).
+[`docs/lab-guide.md`](docs/lab-guide.md).
 
 ## Repo Layout
 
@@ -93,7 +91,7 @@ src/main/java/com/payout/workshop/payout/
   copilot-instructions.md                    repo-wide conventions
   instructions/payout-webhook.instructions.md path-scoped security/idempotency rules
 docs/
-  00-setup.md                    pre-work checklist sent to attendees
-  01-workshop-1-facilitator-guide.md   run-of-show, timing, prompts, debug injection
-  02-workshop-1-lab-guide.md           student-facing step-by-step lab
+  setup.md                    pre-work checklist sent to attendees
+  facilitator-guide.md       run-of-show, timing, prompts, debug injection
+  lab-guide.md               student-facing step-by-step lab
 ```
