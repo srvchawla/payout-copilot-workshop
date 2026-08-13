@@ -48,11 +48,10 @@ cd payout-copilot-workshop
 ## 6. Verify the app itself boots (before touching any code)
 
 ```bash
-./scripts/dev-up.sh          # starts Postgres + Redis
-./mvnw spring-boot:run       # leave this running in its own terminal
+./scripts/dev-up.sh          # starts Postgres, Redis, and Spring Boot
 ```
 
-In a second terminal:
+Verify the complete stack:
 
 ```bash
 curl -s http://localhost:8080/actuator/health | jq .
@@ -77,10 +76,10 @@ You should see `"status":"UP"` with `db`, `redis`, and `ping` all `UP` too:
 }
 ```
 
-Stop the app with Ctrl+C once confirmed, then run `./scripts/dev-down.sh` to
-stop this repository's Postgres and Redis services. If `db` or `redis` show
-`DOWN`, re-run `./scripts/dev-up.sh` and check `docker ps` shows both
-containers healthy.
+Run `./scripts/dev-down.sh` when you finish to stop Spring Boot, Postgres, and
+Redis gracefully. If the app or either dependency goes down, rerun
+`./scripts/dev-up.sh`; it keeps healthy services running and recovers missing
+ones. If Spring Boot cannot start, inspect `.run/payout-service.log`.
 
 Post a ✅ in the workshop Slack channel once `verify-env.sh` passes with no
 `FAIL` lines. If you see a `WARN` for `gh`/`copilot`, install before the

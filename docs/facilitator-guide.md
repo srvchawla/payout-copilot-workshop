@@ -25,19 +25,19 @@ Have everyone run, in order:
 ./scripts/dev-up.sh
 ```
 
-Then confirm the app itself boots and talks to Postgres/Redis correctly
-*before* touching any code:
+Then confirm the app talks to Postgres and Redis correctly *before* touching
+any code:
 ```bash
-./mvnw spring-boot:run   # separate terminal, leave running
 curl -s http://localhost:8080/actuator/health
 ```
 Or open http://localhost:8080/actuator/health in a browser for a visual check.
-Expect `"status":"UP"` with `db` and `redis` both `UP`. Stop with Ctrl+C, then:
+Expect `"status":"UP"` with `db` and `redis` both `UP`. Then run:
 ```bash
 ./mvnw test
 ```
-At the end of the session, stop the app with Ctrl+C and run
-`./scripts/dev-down.sh` to clean up only this repository's local services.
+At the end of the session, run `./scripts/dev-down.sh` to stop Spring Boot,
+Postgres, and Redis gracefully. Rerun `./scripts/dev-up.sh` if any managed
+service goes down; startup failures are logged in `.run/payout-service.log`.
 `test` should FAIL — that's expected (`webhook`/`ledger` classes throw
 `UnsupportedOperationException`). This is the RED state the lab starts from.
 Anyone still failing `verify-env.sh` pairs up with a neighbor rather than

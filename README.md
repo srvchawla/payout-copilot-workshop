@@ -48,8 +48,8 @@ facilitator reference.
   [`docker-compose.yml`](docker-compose.yml), and
   [`src/main/resources/application.yml`](src/main/resources/application.yml).
 
-  Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`. Start the service
-  with `./mvnw spring-boot:run` and open
+  Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`, which starts
+  PostgreSQL, Redis, and the Spring Boot service. Open
   [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
 
   **Done when:** the application, PostgreSQL, and Redis report `UP`.
@@ -127,25 +127,28 @@ task, and **Copilot Code Review** for the resulting pull request.
 
 ```bash
 ./scripts/verify-env.sh   # confirms Java/Docker/Copilot CLI are ready
-./scripts/dev-up.sh       # starts Postgres + Redis
+./scripts/dev-up.sh       # starts Postgres, Redis, and Spring Boot
 ```
 
-Verify the app itself boots before touching any code:
+Verify the complete stack before touching any code:
 ```bash
-./mvnw spring-boot:run           # separate terminal, leave running
 curl -s http://localhost:8080/actuator/health   # expect "status":"UP"
 ```
 Or open http://localhost:8080/actuator/health directly in a browser.
+
+You can rerun `./scripts/dev-up.sh` at any time. It leaves healthy services
+running and recovers stopped containers or the managed Spring Boot process.
+If application startup fails, inspect `.run/payout-service.log`.
 
 Then run the test suite:
 ```bash
 ./mvnw test               # expect RED: webhook/ledger classes are TODO stubs
 ```
 
-When finished, stop the app with Ctrl+C and shut down the local services:
+When finished, shut down all managed services gracefully:
 
 ```bash
-./scripts/dev-down.sh     # stops this repo's Postgres + Redis services
+./scripts/dev-down.sh     # stops Spring Boot, Postgres, and Redis
 ```
 
 The lab is to make `./mvnw test` pass using Copilot Plan Mode, Custom
