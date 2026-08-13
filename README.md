@@ -33,80 +33,80 @@ Run the repository readiness check after cloning:
 - Compliance rules and larger multi-file Agent Mode tasks
 - GitHub workflow with Copilot Cloud Agent and Copilot Code Review
 
-See [`docs/`](docs) for the facilitator guide, student lab guide, and setup
+See [`docs/`](docs) for the facilitator guide, lab exercise guide, and setup
 checklist.
 
-## Student Lab Path
+## Lab Exercise Path
 
 Mark an item complete by changing `[ ]` to `[x]` in this file. The `main`
-branch is the student starting point; the `solution` branch is a facilitator
-reference.
+branch is the lab exercise starting point; the `solution` branch is a
+facilitator reference.
 
-### [ ] 1. Verify the environment
+- [ ] **1. Verify the environment**
 
-**Open:** [`scripts/verify-env.sh`](scripts/verify-env.sh),
-[`docker-compose.yml`](docker-compose.yml), and
-[`src/main/resources/application.yml`](src/main/resources/application.yml).
+  **Open:** [`scripts/verify-env.sh`](scripts/verify-env.sh),
+  [`docker-compose.yml`](docker-compose.yml), and
+  [`src/main/resources/application.yml`](src/main/resources/application.yml).
 
-Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`. Start the service
-with `./mvnw spring-boot:run` and open
-[http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
+  Run `./scripts/verify-env.sh`, then `./scripts/dev-up.sh`. Start the service
+  with `./mvnw spring-boot:run` and open
+  [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
 
-**Done when:** the application, PostgreSQL, and Redis report `UP`.
+  **Done when:** the application, PostgreSQL, and Redis report `UP`.
 
-### [ ] 2. Read the executable specification
+- [ ] **2. Read the executable specification**
 
-**Open:** [`WebhookControllerTest.java`](src/test/java/com/payout/workshop/payout/webhook/WebhookControllerTest.java).
+  **Open:** [`WebhookControllerTest.java`](src/test/java/com/payout/workshop/payout/webhook/WebhookControllerTest.java).
 
-Run `./mvnw test` and observe the intentional RED state. Read the four tests:
-invalid-signature rejection, successful crediting, FX conversion, and
-duplicate delivery. Do not edit the test file.
+  Run `./mvnw test` and observe the intentional RED state. Read the four tests:
+  invalid-signature rejection, successful crediting, FX conversion, and
+  duplicate delivery. Do not edit the test file.
 
-**Done when:** you can explain what each test expects before writing code.
+  **Done when:** you can explain what each test expects before writing code.
 
-### [ ] 3. Plan the implementation with Plan Mode
+- [ ] **3. Plan the implementation with Plan Mode**
 
-**Open:** [`WebhookController.java`](src/main/java/com/payout/workshop/payout/webhook/WebhookController.java),
-[`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java),
-[`IdempotencyService.java`](src/main/java/com/payout/workshop/payout/webhook/IdempotencyService.java),
-[`PayoutEventListener.java`](src/main/java/com/payout/workshop/payout/webhook/PayoutEventListener.java),
-and [`LedgerService.java`](src/main/java/com/payout/workshop/payout/ledger/LedgerService.java).
+  **Open:** [`WebhookController.java`](src/main/java/com/payout/workshop/payout/webhook/WebhookController.java),
+  [`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java),
+  [`IdempotencyService.java`](src/main/java/com/payout/workshop/payout/webhook/IdempotencyService.java),
+  [`PayoutEventListener.java`](src/main/java/com/payout/workshop/payout/webhook/PayoutEventListener.java),
+  and [`LedgerService.java`](src/main/java/com/payout/workshop/payout/ledger/LedgerService.java).
 
-Use **Plan Mode** to propose the implementation sequence and identify risks
-before allowing code changes. Focus on the `TODO(workshop)` contracts.
+  Use **Plan Mode** to propose the implementation sequence and identify risks
+  before allowing code changes. Focus on the `TODO(workshop)` contracts.
 
-**Done when:** the plan explains the signature check, atomic Redis lock,
-asynchronous boundary, and ledger conversion flow.
+  **Done when:** the plan explains the signature check, atomic Redis lock,
+  asynchronous boundary, and ledger conversion flow.
 
-### [ ] 4. Apply the repository guardrails
+- [ ] **4. Apply the repository guardrails**
 
-**Open:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
-and [`.github/instructions/payout-webhook.instructions.md`](.github/instructions/payout-webhook.instructions.md).
+  **Open:** [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
+  and [`.github/instructions/payout-webhook.instructions.md`](.github/instructions/payout-webhook.instructions.md).
 
-Review how repository-wide conventions and path-specific webhook security rules
-shape Copilot's suggestions. This is the **Custom Instructions** exercise.
+  Review how repository-wide conventions and path-specific webhook security rules
+  shape Copilot's suggestions. This is the **Custom Instructions** exercise.
 
-**Done when:** you know which rules apply automatically to the webhook files.
+  **Done when:** you know which rules apply automatically to the webhook files.
 
-### [ ] 5. Implement and test with Agent Mode
+- [ ] **5. Implement and test with Agent Mode**
 
-Use **Agent Mode in the IDE** to implement the five TODO files without changing
-the tests. Ask it to run `./mvnw test` as it iterates.
+  Use **Agent Mode in the IDE** to implement the five TODO files without
+  changing the tests. Ask it to run `./mvnw test` as it iterates.
 
-**Done when:** all tests pass and the implementation verifies signatures before
-parsing, uses one atomic Redis idempotency operation, handles events
-asynchronously, and uses `BigDecimal` for money.
+  **Done when:** all tests pass and the implementation verifies signatures
+  before parsing, uses one atomic Redis idempotency operation, handles events
+  asynchronously, and uses `BigDecimal` for money.
 
-### [ ] 6. Debug a seeded defect
+- [ ] **6. Debug a seeded defect**
 
-Use **Agent Mode for debugging** with either
-[`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java)
-or [`IdempotencyService.java`](src/main/java/com/payout/workshop/payout/webhook/IdempotencyService.java).
-Introduce a timing-safe comparison defect or a check-then-set race, then ask
-Copilot to reproduce it, add a regression test, and repair it.
+  Use **Agent Mode for debugging** with either
+  [`SignatureVerifier.java`](src/main/java/com/payout/workshop/payout/webhook/SignatureVerifier.java)
+  or [`IdempotencyService.java`](src/main/java/com/payout/workshop/payout/webhook/IdempotencyService.java).
+  Introduce a timing-safe comparison defect or a check-then-set race, then ask
+  Copilot to reproduce it, add a regression test, and repair the defect.
 
-**Done when:** the regression test fails against the defect and passes after
-the repair.
+  **Done when:** the regression test fails against the defect and passes after
+  the repair.
 
 ### Optional follow-up capabilities
 
@@ -159,5 +159,5 @@ src/main/java/com/payout/workshop/payout/
 docs/
   setup.md                    pre-work checklist sent to attendees
   facilitator-guide.md       run-of-show, timing, prompts, debug injection
-  lab-guide.md               student-facing step-by-step lab
+  lab-guide.md               lab exercise step-by-step guide
 ```
