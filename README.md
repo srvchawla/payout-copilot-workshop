@@ -41,7 +41,7 @@ checklist.
 Mark each row as complete while walking through the lab.
 
 | Done | Exercise | Backend outcome | Copilot capability |
-|---|---|---|
+|---|---|---|---|
 | [ ] | Plan the webhook flow | Define the files, boundaries, and risks before coding | **Plan Mode** |
 | [ ] | Apply webhook guardrails | Enforce signature verification, atomic idempotency, and safe logging conventions | **Custom Instructions** |
 | [ ] | Implement the webhook | Build and test the multi-file feature from the executable specification | **Agent Mode in the IDE** |
