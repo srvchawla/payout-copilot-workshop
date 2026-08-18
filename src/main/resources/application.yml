@@ -31,7 +31,7 @@ management:
 # Shared secret used to verify inbound Payout-Transmission-Sig headers.
 # Never commit a real secret here - this is workshop-only.
 webhook:
-  secret: workshop-shared-secret-change-me
+  secret: ABCXYZ
   idempotency-ttl-hours: 24
 
 logging:
