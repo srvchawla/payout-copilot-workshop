@@ -33,8 +33,8 @@ Run the repository readiness check after cloning:
 - Compliance rules and larger multi-file Agent Mode tasks
 - GitHub workflow with Copilot Cloud Agent and Copilot Code Review
 
-See [`docs/`](docs) for the facilitator guide, lab exercise guide, and setup
-checklist.
+See [`docs/`](docs) for the facilitator guide, lab exercise guide, setup
+checklist, and [webhook diagrams](docs/webhook-diagrams.md).
 
 ## Lab Exercise Path
 
