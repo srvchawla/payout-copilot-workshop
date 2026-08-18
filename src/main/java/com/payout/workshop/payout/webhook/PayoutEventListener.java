@@ -34,7 +34,7 @@ public class PayoutEventListener {
     @EventListener
     public void onPayoutStatusReceived(PayoutStatusReceivedEvent event) {
         PayoutWebhookPayload payload = event.payload();
-        if (!COMPLETED_STATUS.equalsIgnoreCase(payload.status())) {
+        if (!COMPLETED_STATUS.equals(payload.status())) {
             log.debug("Ignoring payout status {} for eventId={}", payload.status(), payload.eventId());
             return;
         }
