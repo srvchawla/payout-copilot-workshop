@@ -84,7 +84,7 @@ public class LedgerService {
     }
 
     private void backoff(int attempt, String accountId) {
-        long ceiling = Math.min(BASE_BACKOFF_MILLIS * attempt, MAX_BACKOFF_MILLIS);
+        long ceiling = Math.max(1, Math.min(BASE_BACKOFF_MILLIS * attempt, MAX_BACKOFF_MILLIS));
         try {
             Thread.sleep(ThreadLocalRandom.current().nextLong(1, ceiling + 1));
         } catch (InterruptedException e) {

@@ -47,10 +47,14 @@ class LedgerServiceConcurrencyTest {
     @Autowired
     private AccountRepository accountRepository;
 
+    private long initialVersion;
+
     @BeforeEach
     void seedAccount() {
         accountRepository.deleteAll();
-        accountRepository.save(new AccountBalance(ACCOUNT_ID, "USD", STARTING_BALANCE));
+        initialVersion = accountRepository
+                .saveAndFlush(new AccountBalance(ACCOUNT_ID, "USD", STARTING_BALANCE))
+                .getVersion();
     }
 
     @Test
@@ -95,6 +99,6 @@ class LedgerServiceConcurrencyTest {
                         CREDIT_AMOUNT.multiply(BigDecimal.valueOf(CONCURRENT_PAYOUTS))));
         // One persisted update per payout - a retry re-reads the row, it never
         // replays a credit that already landed.
-        assertThat(account.getVersion()).isEqualTo(CONCURRENT_PAYOUTS);
+        assertThat(account.getVersion()).isEqualTo(initialVersion + CONCURRENT_PAYOUTS);
     }
 }
