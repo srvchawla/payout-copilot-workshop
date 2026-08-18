@@ -119,9 +119,9 @@ FINAL_BALANCE=$(query_balance)
 	|| fail "duplicate delivery changed the balance to $FINAL_BALANCE"
 echo "OK   - duplicate delivery left the balance at $FINAL_BALANCE"
 
-IDEMPOTENCY_VALUE=$(docker compose exec -T redis redis-cli \
-	GET "payout-webhook:processed:$EVENT_ID" | tr -d '[:space:]')
-[ "$IDEMPOTENCY_VALUE" = "1" ] || fail "Redis idempotency key was not found"
+IDEMPOTENCY_KEY_EXISTS=$(docker compose exec -T redis redis-cli \
+	EXISTS "payout-webhook:processed:$EVENT_ID" | tr -d '[:space:]')
+[ "$IDEMPOTENCY_KEY_EXISTS" = "1" ] || fail "Redis idempotency key was not found"
 echo "OK   - Redis contains the idempotency key for $EVENT_ID"
 
 echo
