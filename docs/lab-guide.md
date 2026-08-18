@@ -132,6 +132,9 @@ Manual webhook verification passed.
 The final database row should show a balance of `125.0000` and a version of
 `1`. A version of `1` confirms that only the first delivery updated the row.
 
+To run the same checks by hand — including the signing commands for Bash, zsh,
+and PowerShell — see the [API usage guide](api-usage.md).
+
 ### Why this step matters
 
 `WebhookControllerTest` uses temporary Testcontainers instances that are
