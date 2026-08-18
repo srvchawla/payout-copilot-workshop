@@ -20,10 +20,13 @@ server:
   shutdown: graceful
 
 management:
+  # Workshop-only: the actuator endpoints are exposed unauthenticated on the
+  # application port because everything runs locally. In a real deployment put
+  # them behind auth or a separate, non-internet-facing management port.
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics
   endpoint:
     health:
       show-details: always
