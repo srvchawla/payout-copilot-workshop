@@ -38,7 +38,8 @@ Run the repository readiness check after cloning:
 - GitHub workflow with Copilot Cloud Agent and Copilot Code Review
 
 See [`docs/`](docs) for the facilitator guide, lab exercise guide, setup
-checklist, and [webhook diagrams](docs/webhook-diagrams.md).
+checklist, [operations runbook](docs/runbook.md), and
+[webhook diagrams](docs/webhook-diagrams.md).
 
 ## Lab Exercise Path
 
@@ -155,6 +156,10 @@ When finished, shut down all managed services gracefully:
 ./scripts/dev-down.sh     # stops Spring Boot, Postgres, and Redis
 ```
 
+For day-to-day operations — health checks, manual webhook testing, Postgres
+and Redis inspection, log locations, and troubleshooting — see
+[`docs/runbook.md`](docs/runbook.md).
+
 The lab is to make `./mvnw test` pass using Copilot Plan Mode, Custom
 Instructions, and Agent Mode — see
 [`docs/lab-guide.md`](docs/lab-guide.md).
@@ -173,4 +178,5 @@ docs/
   setup.md                    pre-work checklist sent to attendees
   facilitator-guide.md       run-of-show, timing, prompts, debug injection
   lab-guide.md               lab exercise step-by-step guide
+  runbook.md                 operations runbook: startup, health, logs, shutdown
 ```
