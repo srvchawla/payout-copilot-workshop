@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HexFormat;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -79,6 +80,68 @@ class WebhookControllerTest {
 
         mockMvc.perform(post("/webhooks/payout-status")
                         .header("Payout-Transmission-Sig", "not-a-real-signature")
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void rejectsRequestWithMissingSignatureHeader() throws Exception {
+        String body = payload("evt-no-sig", "acct-usd-1", "25.00", "USD");
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void rejectsRequestWithBlankSignatureHeader() throws Exception {
+        String body = payload("evt-blank-sig", "acct-usd-1", "25.00", "USD");
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", "   ")
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void rejectsRequestWithMalformedHexSignature() throws Exception {
+        String body = payload("evt-malformed-sig", "acct-usd-1", "25.00", "USD");
+        String malformed = "zz" + sign(body).substring(2);
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", malformed)
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void rejectsRequestWithUppercaseHexSignatureOfAnotherBody() throws Exception {
+        String body = payload("evt-upper-sig", "acct-usd-1", "25.00", "USD");
+        String otherSignature = sign(body + " ").toUpperCase(Locale.ROOT);
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", otherSignature)
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void rejectsRequestWithIncorrectLengthSignature() throws Exception {
+        String body = payload("evt-short-sig", "acct-usd-1", "25.00", "USD");
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", sign(body).substring(0, 32))
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", sign(body) + "00")
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isUnauthorized());
