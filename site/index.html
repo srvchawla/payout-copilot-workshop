@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive companion for the Payout Webhook GitHub Copilot workshop.">
+  <meta name="theme-color" content="#101820">
+  <title>Payout Webhook Lab</title>
+  <link rel="icon" href="assets/payout-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="topbar">
+    <button class="icon-button menu-button" type="button" data-menu-toggle aria-label="Open workshop navigation" aria-expanded="false" title="Open navigation">☰</button>
+    <a class="brand" href="#overview" aria-label="Payout Webhook Lab home">
+      <span class="brand-mark" aria-hidden="true">P</span>
+      <span>
+        <strong>Payout Webhook Lab</strong>
+        <small>GitHub Copilot workshop</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <div class="progress-compact" aria-label="Workshop progress">
+        <span data-progress-label>0 of 6 complete</span>
+        <span class="progress-track"><span data-progress-bar></span></span>
+      </div>
+      <a class="button button-quiet hide-mobile" href="https://github.com/srvchawla/payout-copilot-workshop" target="_blank" rel="noreferrer">Repository <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" data-sidebar aria-label="Workshop navigation">
+      <div class="sidebar-heading">Workshop path</div>
+      <nav>
+        <a class="nav-link active" href="#overview"><span class="nav-icon">⌂</span><span>Overview</span></a>
+        <a class="nav-link" href="#step-1"><span class="step-number">1</span><span>Verify environment</span><span class="step-state" data-step-state="1">○</span></a>
+        <a class="nav-link" href="#step-2"><span class="step-number">2</span><span>Read the spec</span><span class="step-state" data-step-state="2">○</span></a>
+        <a class="nav-link" href="#step-3"><span class="step-number">3</span><span>Plan the change</span><span class="step-state" data-step-state="3">○</span></a>
+        <a class="nav-link" href="#step-4"><span class="step-number">4</span><span>Apply guardrails</span><span class="step-state" data-step-state="4">○</span></a>
+        <a class="nav-link" href="#step-5"><span class="step-number">5</span><span>Build and test</span><span class="step-state" data-step-state="5">○</span></a>
+        <a class="nav-link" href="#step-6"><span class="step-number">6</span><span>Debug a defect</span><span class="step-state" data-step-state="6">○</span></a>
+      </nav>
+
+      <div class="sidebar-heading tools-heading">Explore</div>
+      <nav>
+        <a class="nav-link" href="#simulator"><span class="nav-icon">▶</span><span>Webhook simulator</span></a>
+        <a class="nav-link" href="#architecture"><span class="nav-icon">⌘</span><span>Architecture</span></a>
+        <a class="nav-link" href="#manual"><span class="nav-icon">›_</span><span>Manual verification</span></a>
+        <a class="nav-link" href="#troubleshooting"><span class="nav-icon">?</span><span>Troubleshooting</span></a>
+      </nav>
+    </aside>
+    <button class="sidebar-scrim" data-menu-toggle type="button" aria-label="Close workshop navigation"></button>
+
+    <main id="main-content" class="main-content">
+      <section id="overview" class="section overview-section">
+        <div class="repo-breadcrumb"><span class="repo-icon" aria-hidden="true">◈</span> srvchawla / <strong>payout-copilot-workshop</strong> <span class="visibility">Public</span></div>
+
+        <div class="overview-grid">
+          <div class="overview-copy">
+            <div class="eyebrow">Hands-on lab · Java 17 · Spring Boot 3</div>
+            <h1>Secure every payout.<br><span>Process it exactly once.</span></h1>
+            <p>Build a signed, idempotent payout webhook with GitHub Copilot. Follow one event from an untrusted request to a durable ledger credit.</p>
+            <div class="button-row">
+              <a class="button button-primary" href="#step-1"><span aria-hidden="true">▶</span> Start the lab</a>
+              <a class="button button-secondary" href="#architecture"><span aria-hidden="true">⌘</span> View architecture</a>
+            </div>
+          </div>
+
+          <div class="event-visual" aria-label="Example completed payout event">
+            <div class="visual-header">
+              <span><span class="pulse-dot"></span> Event received</span>
+              <span class="status-chip success">COMPLETED</span>
+            </div>
+            <div class="amount-display"><span>$</span>25.00 <small>USD</small></div>
+            <div class="account-route">
+              <div><small>FROM</small><strong>Payout API</strong></div>
+              <span class="route-line" aria-hidden="true">••••••▶</span>
+              <div><small>TO</small><strong>acct-usd-1</strong></div>
+            </div>
+            <div class="visual-result">
+              <span>Ledger balance</span>
+              <strong>$100.00 <span aria-hidden="true">→</span> $125.00</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="acceptance-strip" aria-label="Lab acceptance criteria">
+          <div><span class="metric-icon blue">401</span><span><strong>Reject</strong><small>Invalid signature</small></span></div>
+          <div><span class="metric-icon teal">HMAC</span><span><strong>Verify</strong><small>Exact raw body</small></span></div>
+          <div><span class="metric-icon amber">NX</span><span><strong>Deduplicate</strong><small>Atomic Redis lock</small></span></div>
+          <div><span class="metric-icon green">+25</span><span><strong>Credit</strong><small>Async ledger update</small></span></div>
+        </div>
+      </section>
+
+      <section class="section lab-section" aria-labelledby="lab-path-title">
+        <div class="section-heading">
+          <div><div class="eyebrow">Your path</div><h2 id="lab-path-title">Six steps from red to green</h2></div>
+          <button class="button button-quiet" type="button" data-reset-progress title="Reset progress"><span aria-hidden="true">↺</span> Reset progress</button>
+        </div>
+
+        <article id="step-1" class="lab-step" data-step="1">
+          <div class="step-rail"><span>1</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">SETUP · 10 MIN</span><h3>Verify the environment</h3></div><button class="complete-button" type="button" data-complete="1"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Confirm Java, Docker, Copilot CLI, Postgres, Redis, and the Spring Boot service before changing code.</p>
+            <div class="command-block"><div class="command-title"><span>Terminal</span><button type="button" class="copy-button" data-copy="./scripts/verify-env.sh&#10;./scripts/dev-up.sh&#10;curl -s http://localhost:8080/actuator/health" title="Copy commands"><span aria-hidden="true">⧉</span> Copy</button></div><pre><code>./scripts/verify-env.sh
+./scripts/dev-up.sh
+curl -s http://localhost:8080/actuator/health</code></pre></div>
+            <div class="done-when"><strong>Done when</strong><span>The health response reports the application, database, and Redis as <code>UP</code>.</span></div>
+          </div>
+        </article>
+
+        <article id="step-2" class="lab-step" data-step="2">
+          <div class="step-rail"><span>2</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">SPEC · 10 MIN</span><h3>Read the executable specification</h3></div><button class="complete-button" type="button" data-complete="2"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Run the tests, observe the intentional red state, and read the four behaviors before asking Copilot to implement anything.</p>
+            <div class="test-grid">
+              <span><i class="test-dot red"></i> Invalid signature → 401</span>
+              <span><i class="test-dot blue"></i> Valid payout → credit</span>
+              <span><i class="test-dot teal"></i> USD → EUR conversion</span>
+              <span><i class="test-dot amber"></i> Duplicate → exactly once</span>
+            </div>
+            <div class="command-block compact"><div class="command-title"><span>Terminal</span><button type="button" class="copy-button" data-copy="./mvnw test" title="Copy command"><span aria-hidden="true">⧉</span> Copy</button></div><pre><code>./mvnw test</code></pre></div>
+            <div class="done-when"><strong>Done when</strong><span>You can explain what each test expects without opening an implementation file.</span></div>
+          </div>
+        </article>
+
+        <article id="step-3" class="lab-step" data-step="3">
+          <div class="step-rail"><span>3</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">PLAN MODE · 15 MIN</span><h3>Plan before writing code</h3></div><button class="complete-button" type="button" data-complete="3"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Ask Plan Mode to identify the implementation sequence and design risks. Review its plan instead of treating it as an answer key.</p>
+            <div class="prompt-block"><div class="prompt-header"><span><b class="copilot-mark">✦</b> Copilot prompt</span><button type="button" class="copy-button" data-copy="We need to implement WebhookController, SignatureVerifier, IdempotencyService, PayoutEventListener, and LedgerService so that WebhookControllerTest passes. Propose the sequence of changes and flag any design risks before writing code." title="Copy prompt"><span aria-hidden="true">⧉</span> Copy</button></div><p>We need to implement WebhookController, SignatureVerifier, IdempotencyService, PayoutEventListener, and LedgerService so that WebhookControllerTest passes. Propose the sequence of changes and flag any design risks before writing code.</p></div>
+            <div class="review-points"><span>Does it identify the atomic Redis operation?</span><span>Does it preserve the asynchronous boundary?</span></div>
+          </div>
+        </article>
+
+        <article id="step-4" class="lab-step" data-step="4">
+          <div class="step-rail"><span>4</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">GUARDRAILS · 5 MIN</span><h3>See custom instructions in action</h3></div><button class="complete-button" type="button" data-complete="4"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Inspect the repository-wide conventions and webhook-specific security rules that Copilot applies automatically.</p>
+            <div class="file-list">
+              <a href="https://github.com/srvchawla/payout-copilot-workshop/blob/main/.github/copilot-instructions.md" target="_blank" rel="noreferrer"><span class="file-icon">#</span><span><strong>copilot-instructions.md</strong><small>Repository conventions</small></span><span>↗</span></a>
+              <a href="https://github.com/srvchawla/payout-copilot-workshop/blob/main/.github/instructions/payout-webhook.instructions.md" target="_blank" rel="noreferrer"><span class="file-icon shield">✓</span><span><strong>payout-webhook.instructions.md</strong><small>Security and idempotency</small></span><span>↗</span></a>
+            </div>
+            <div class="done-when"><strong>Look for</strong><span>Constant-time comparison, exact raw-body HMAC, atomic locking, and no secrets in logs.</span></div>
+          </div>
+        </article>
+
+        <article id="step-5" class="lab-step featured-step" data-step="5">
+          <div class="step-rail"><span>5</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">AGENT MODE · 25 MIN</span><h3>Build, test, and iterate</h3></div><button class="complete-button" type="button" data-complete="5"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Give Agent Mode the outcome and constraints. Watch it gather context, make focused edits, run tests, and respond to failures.</p>
+            <div class="prompt-block"><div class="prompt-header"><span><b class="copilot-mark">✦</b> Copilot prompt</span><button type="button" class="copy-button" data-copy="Implement SignatureVerifier, IdempotencyService, PayoutEventListener, WebhookController, and LedgerService so that every test in WebhookControllerTest passes. Run ./mvnw test after each change and keep iterating until all tests are green. Do not modify the test file." title="Copy prompt"><span aria-hidden="true">⧉</span> Copy</button></div><p>Implement SignatureVerifier, IdempotencyService, PayoutEventListener, WebhookController, and LedgerService so that every test in WebhookControllerTest passes. Run <code>./mvnw test</code> after each change and keep iterating until all tests are green. Do not modify the test file.</p></div>
+            <div class="implementation-flow" aria-label="Implementation components"><span>SignatureVerifier</span><b>+</b><span>IdempotencyService</span><b>+</b><span>WebhookController</span><b>+</b><span>EventListener</span><b>+</b><span>LedgerService</span></div>
+          </div>
+        </article>
+
+        <article id="step-6" class="lab-step" data-step="6">
+          <div class="step-rail"><span>6</span></div>
+          <div class="step-content">
+            <div class="step-heading"><div><span class="step-label">DEBUG · 15 MIN</span><h3>Find a realistic defect</h3></div><button class="complete-button" type="button" data-complete="6"><span aria-hidden="true">○</span> Mark complete</button></div>
+            <p>Choose a challenge. Introduce the defect in one prompt, then start a fresh debugging conversation to reproduce and repair it.</p>
+            <div class="challenge-grid">
+              <article class="challenge"><div><span class="issue-label security">SECURITY</span><span class="issue-number">#101</span></div><h4>Signature timing leak</h4><p>Replace constant-time digest comparison with <code>String#equals</code>, then ask Copilot to find the review risk.</p><button type="button" class="button button-secondary challenge-button" data-reveal="signature-hint">Reveal hint</button><div class="hint" id="signature-hint" hidden>Inspect how the computed and provided digests are compared. Equal content is not the only security requirement.</div></article>
+              <article class="challenge"><div><span class="issue-label reliability">RELIABILITY</span><span class="issue-number">#102</span></div><h4>Idempotency race</h4><p>Replace atomic acquisition with check-then-set, then reproduce concurrent duplicate credits.</p><button type="button" class="button button-secondary challenge-button" data-reveal="redis-hint">Reveal hint</button><div class="hint" id="redis-hint" hidden>Two requests can both observe a missing key before either writes it. The fix must be one Redis operation.</div></article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="simulator" class="section simulator-section" aria-labelledby="simulator-title">
+        <div class="section-heading light-heading"><div><div class="eyebrow">Interactive model</div><h2 id="simulator-title">Send a simulated webhook</h2><p>Explore expected behavior without connecting to an application or using a real secret.</p></div><span class="simulation-badge">Browser simulation</span></div>
+        <div class="simulator-layout">
+          <form class="simulator-controls" data-simulator-form>
+            <fieldset><legend>Status</legend><div class="segmented-control"><label><input type="radio" name="status" value="PENDING"><span>PENDING</span></label><label><input type="radio" name="status" value="COMPLETED" checked><span>COMPLETED</span></label><label><input type="radio" name="status" value="FAILED"><span>FAILED</span></label></div></fieldset>
+            <div class="field-row"><label>Amount <span class="input-wrap"><span>$</span><input name="amount" type="number" value="25.00" min="0.01" step="0.01"></span></label><label>Currency <select name="currency"><option>USD</option><option>EUR</option><option>GBP</option></select></label></div>
+            <div class="toggle-row"><span><strong>Valid signature</strong><small>Simulate HMAC verification</small></span><label class="switch"><input name="validSignature" type="checkbox" checked><span></span></label></div>
+            <div class="toggle-row"><span><strong>Duplicate delivery</strong><small>Reuse the same event ID</small></span><label class="switch"><input name="duplicate" type="checkbox"><span></span></label></div>
+            <button class="button simulator-button" type="submit"><span aria-hidden="true">▶</span> Send webhook</button>
+          </form>
+
+          <div class="pipeline-panel" aria-live="polite">
+            <div class="pipeline" data-pipeline>
+              <div class="pipeline-node" data-node="request"><span>1</span><strong>Request</strong><small>Waiting</small></div><i></i>
+              <div class="pipeline-node" data-node="signature"><span>2</span><strong>Signature</strong><small>Waiting</small></div><i></i>
+              <div class="pipeline-node" data-node="redis"><span>3</span><strong>Redis</strong><small>Waiting</small></div><i></i>
+              <div class="pipeline-node" data-node="ledger"><span>4</span><strong>Ledger</strong><small>Waiting</small></div>
+            </div>
+            <div class="simulation-result" data-simulation-result>
+              <div class="empty-result"><span>▶</span><strong>Ready for an event</strong><small>Configure the delivery and select Send webhook.</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture" class="section architecture-section" aria-labelledby="architecture-title">
+        <div class="section-heading"><div><div class="eyebrow">System map</div><h2 id="architecture-title">One event, six trust boundaries</h2><p>Select a component to inspect its responsibility and primary risk.</p></div></div>
+        <div class="architecture-flow" role="list">
+          <button class="architecture-node active" type="button" data-architecture="controller"><span class="architecture-icon blue">HTTP</span><strong>Controller</strong><small>Shape and dispatch</small></button><span class="architecture-arrow">→</span>
+          <button class="architecture-node" type="button" data-architecture="signature"><span class="architecture-icon red">HMAC</span><strong>Signature</strong><small>Authenticate body</small></button><span class="architecture-arrow">→</span>
+          <button class="architecture-node" type="button" data-architecture="redis"><span class="architecture-icon amber">NX</span><strong>Redis</strong><small>Claim event ID</small></button><span class="architecture-arrow">→</span>
+          <button class="architecture-node" type="button" data-architecture="event"><span class="architecture-icon teal">ASYNC</span><strong>Event</strong><small>Leave request thread</small></button><span class="architecture-arrow">→</span>
+          <button class="architecture-node" type="button" data-architecture="ledger"><span class="architecture-icon green">FX</span><strong>Ledger</strong><small>Convert and credit</small></button><span class="architecture-arrow">→</span>
+          <button class="architecture-node" type="button" data-architecture="postgres"><span class="architecture-icon navy">DB</span><strong>Postgres</strong><small>Persist balance</small></button>
+        </div>
+        <div class="architecture-detail" data-architecture-detail>
+          <div><span class="detail-label">RESPONSIBILITY</span><strong>Reject untrusted requests, parse verified payloads, and publish accepted work.</strong></div>
+          <div><span class="detail-label">PRIMARY RISK</span><strong>Doing ledger or FX work synchronously delays the webhook response.</strong></div>
+          <div><span class="detail-label">OWNER</span><a href="https://github.com/srvchawla/payout-copilot-workshop/blob/main/src/main/java/com/payout/workshop/payout/webhook/WebhookController.java" target="_blank" rel="noreferrer">WebhookController.java ↗</a></div>
+        </div>
+      </section>
+
+      <section id="manual" class="section manual-section" aria-labelledby="manual-title">
+        <div class="section-heading"><div><div class="eyebrow">Real stack verification</div><h2 id="manual-title">Prove it outside the test container</h2><p>The script rebuilds the application, seeds a local account, signs an event, sends it twice, and checks Postgres and Redis.</p></div></div>
+        <div class="manual-layout">
+          <div class="verification-list">
+            <div><span>1</span><p><strong>Recreate local services</strong><small>Clean Postgres and Redis containers</small></p></div>
+            <div><span>2</span><p><strong>Seed account</strong><small>acct-manual-1 · 100.0000 USD</small></p></div>
+            <div><span>3</span><p><strong>Send signed payout</strong><small>COMPLETED · 25.00 USD</small></p></div>
+            <div><span>4</span><p><strong>Send duplicate</strong><small>Same event ID · no second credit</small></p></div>
+            <div><span>5</span><p><strong>Verify durable state</strong><small>Balance 125.0000 · Redis key present</small></p></div>
+          </div>
+          <div class="manual-command">
+            <div class="terminal-window"><div class="terminal-bar"><span><i></i><i></i><i></i></span><strong>manual verification</strong></div><pre><code><span class="terminal-prompt">$</span> ./scripts/manual-webhook-test.sh
+
+<span class="terminal-muted">Seeding acct-manual-1...</span>
+<span class="terminal-success">OK</span> first delivery → 125.0000
+<span class="terminal-success">OK</span> duplicate → 125.0000
+<span class="terminal-success">OK</span> Redis key found
+
+<span class="terminal-success">Manual webhook verification passed.</span></code></pre></div>
+            <button class="button button-primary full-width" type="button" data-copy="./scripts/manual-webhook-test.sh"><span aria-hidden="true">⧉</span> Copy verification command</button>
+            <p class="data-warning"><span aria-hidden="true">!</span> This script recreates local Compose containers and removes their current data.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="troubleshooting" class="section troubleshooting-section" aria-labelledby="troubleshooting-title">
+        <div class="section-heading"><div><div class="eyebrow">Fast recovery</div><h2 id="troubleshooting-title">Common workshop issues</h2></div></div>
+        <div class="accordion" data-accordion>
+          <details><summary><span class="error-code">5432</span><span><strong>Connection to localhost refused</strong><small>Postgres is not accepting connections.</small></span><span class="chevron">⌄</span></summary><div><p>Start the managed services, wait for health checks, and retry.</p><code>./scripts/dev-up.sh</code></div></details>
+          <details><summary><span class="error-code red-code">401</span><span><strong>Webhook signature rejected</strong><small>The body and HMAC do not match.</small></span><span class="chevron">⌄</span></summary><div><p>Sign the exact bytes sent by curl. Even whitespace or a regenerated timestamp changes the digest.</p><code>./scripts/manual-webhook-test.sh</code></div></details>
+          <details><summary><span class="error-code amber-code">zsh</span><span><strong>read: -p: no coprocess</strong><small>A Bash prompt flag was used in zsh.</small></span><span class="chevron">⌄</span></summary><div><p>Use zsh prompt syntax and keep the secret out of shell history.</p><code>read -s "WEBHOOK_SECRET?Webhook secret: "</code></div></details>
+          <details><summary><span class="error-code teal-code">DB</span><span><strong>account_balance does not exist</strong><small>The fresh database has not been initialized.</small></span><span class="chevron">⌄</span></summary><div><p>Start the Spring Boot application. Hibernate creates the schema during startup.</p><code>./scripts/dev-up.sh</code></div></details>
+        </div>
+      </section>
+
+      <footer>
+        <div><strong>Payout Webhook Lab</strong><span>Built for learning. No production data or secrets are used.</span></div>
+        <div><a href="https://github.com/srvchawla/payout-copilot-workshop/blob/main/docs/lab-guide.md" target="_blank" rel="noreferrer">Lab guide ↗</a><a href="https://github.com/srvchawla/payout-copilot-workshop" target="_blank" rel="noreferrer">GitHub ↗</a></div>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" data-toast role="status" aria-live="polite">Copied to clipboard</div>
+  <script src="app.js"></script>
+</body>
+</html>
