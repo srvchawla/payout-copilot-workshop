@@ -1,5 +1,9 @@
 package com.payout.workshop.payout.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -8,12 +12,12 @@ import java.time.Instant;
  * status is expected to be one of: PENDING, COMPLETED, FAILED.
  */
 public record PayoutWebhookPayload(
-        String eventId,
+        @NotBlank String eventId,
         String payoutId,
-        String accountId,
-        String status,
-        BigDecimal amount,
-        String currency,
+        @NotBlank String accountId,
+        @NotBlank String status,
+        @NotNull @DecimalMin(value = "0", inclusive = false) BigDecimal amount,
+        @NotBlank String currency,
         Instant occurredAt
 ) {
 }
