@@ -3,6 +3,7 @@ package com.payout.workshop.payout.webhook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payout.workshop.payout.dto.PayoutWebhookPayload;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,10 @@ public class WebhookController {
     public ResponseEntity<Void> receivePayoutStatus(
             @RequestHeader(value = "Payout-Transmission-Sig", required = false) String signature,
             @RequestBody String rawBody) throws Exception {
+        if (!signatureVerifier.verify(rawBody, signature)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         throw new UnsupportedOperationException(
-                "TODO(workshop): implement the webhook ingestion flow described above");
+                "TODO(workshop): parse the payload, apply the idempotency check and publish the event");
     }
 }
