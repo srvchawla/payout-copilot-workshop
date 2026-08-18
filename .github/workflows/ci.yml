@@ -31,7 +31,7 @@ jobs:
           cache: maven
 
       - name: Prepare Docker for Testcontainers
-        run: docker info
+        run: docker info || { echo "::error::Docker daemon is not available"; exit 1; }
 
       - name: Run tests
-        run: ./mvnw --batch-mode --no-transfer-progress -Dtestcontainers.docker.host=unix:///var/run/docker.sock test
+        run: ./mvnw --batch-mode --no-transfer-progress -Dtestcontainers.docker.host=unix:///var/run/docker.sock -Dtestcontainers.ryuk.disabled=false test

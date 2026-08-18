@@ -21,6 +21,7 @@
         <java.version>17</java.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <testcontainers.docker.host>unix://${user.home}/.rd/docker.sock</testcontainers.docker.host>
+        <testcontainers.ryuk.disabled>true</testcontainers.ryuk.disabled>
     </properties>
 
     <dependencies>
@@ -108,7 +109,7 @@
                     <environmentVariables>
                         <DOCKER_HOST>${testcontainers.docker.host}</DOCKER_HOST>
                         <!-- Ryuk can't bind-mount the host-side socket path into the Rancher VM; disable it -->
-                        <TESTCONTAINERS_RYUK_DISABLED>true</TESTCONTAINERS_RYUK_DISABLED>
+                        <TESTCONTAINERS_RYUK_DISABLED>${testcontainers.ryuk.disabled}</TESTCONTAINERS_RYUK_DISABLED>
                     </environmentVariables>
                     <!-- Docker Engine 29+ (Rancher Desktop) requires min API 1.44; Testcontainers
                          still falls back to a hardcoded 1.32 default - see testcontainers-java#11212 -->
