@@ -24,7 +24,14 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HexFormat;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -135,6 +142,47 @@ class WebhookControllerTest {
         }
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
+            AccountBalance account = accountRepository.findByAccountId("acct-usd-1").orElseThrow();
+            assertThat(account.getBalance()).isEqualByComparingTo("125.0000");
+        });
+    }
+
+    @Test
+    void concurrentDuplicateDeliveriesAreAppliedExactlyOnce() throws Exception {
+        String eventId = "evt-concurrent-" + Instant.now().toEpochMilli();
+        String body = payload(eventId, "acct-usd-1", "25.00", "USD");
+        String signature = sign(body);
+
+        int concurrency = 8;
+        ExecutorService executor = Executors.newFixedThreadPool(concurrency);
+        CountDownLatch startGate = new CountDownLatch(1);
+        List<Future<Integer>> responses = new ArrayList<>();
+
+        try {
+            // Simulate payout fanning the same delivery out across several connections at once.
+            for (int i = 0; i < concurrency; i++) {
+                responses.add(executor.submit(() -> {
+                    startGate.await();
+                    return mockMvc.perform(post("/webhooks/payout-status")
+                                    .header("Payout-Transmission-Sig", signature)
+                                    .contentType("application/json")
+                                    .content(body))
+                            .andReturn()
+                            .getResponse()
+                            .getStatus();
+                }));
+            }
+            startGate.countDown();
+
+            for (Future<Integer> response : responses) {
+                assertThat(response.get(10, TimeUnit.SECONDS)).isEqualTo(200);
+            }
+        } finally {
+            executor.shutdownNow();
+        }
+
+        // Credited exactly once, and it stays that way once every async worker has drained.
+        await().during(Duration.ofSeconds(2)).atMost(Duration.ofSeconds(10)).untilAsserted(() -> {
             AccountBalance account = accountRepository.findByAccountId("acct-usd-1").orElseThrow();
             assertThat(account.getBalance()).isEqualByComparingTo("125.0000");
         });
