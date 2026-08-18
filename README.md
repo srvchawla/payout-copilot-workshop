@@ -38,7 +38,9 @@ Run the repository readiness check after cloning:
 - GitHub workflow with Copilot Cloud Agent and Copilot Code Review
 
 See [`docs/`](docs) for the facilitator guide, lab exercise guide, setup
-checklist, and [webhook diagrams](docs/webhook-diagrams.md).
+checklist, and [webhook diagrams](docs/webhook-diagrams.md). Design proposals
+live there too — see the
+[transactional outbox proposal](docs/transactional-outbox-proposal.md).
 
 ## Lab Exercise Path
 
@@ -173,4 +175,5 @@ docs/
   setup.md                    pre-work checklist sent to attendees
   facilitator-guide.md       run-of-show, timing, prompts, debug injection
   lab-guide.md               lab exercise step-by-step guide
+  transactional-outbox-proposal.md  design proposal: outbox instead of in-process events
 ```
