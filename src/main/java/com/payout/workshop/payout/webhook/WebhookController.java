@@ -2,7 +2,10 @@ package com.payout.workshop.payout.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payout.workshop.payout.dto.PayoutWebhookPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WebhookController {
 
+    private static final Logger log = LoggerFactory.getLogger(WebhookController.class);
+
     private final SignatureVerifier signatureVerifier;
     private final IdempotencyService idempotencyService;
     private final ApplicationEventPublisher eventPublisher;
@@ -42,7 +47,18 @@ public class WebhookController {
     public ResponseEntity<Void> receivePayoutStatus(
             @RequestHeader(value = "Payout-Transmission-Sig", required = false) String signature,
             @RequestBody String rawBody) throws Exception {
-        throw new UnsupportedOperationException(
-                "TODO(workshop): implement the webhook ingestion flow described above");
+        if (!signatureVerifier.verify(rawBody, signature)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        PayoutWebhookPayload payload = objectMapper.readValue(rawBody, PayoutWebhookPayload.class);
+
+        if (!idempotencyService.tryAcquire(payload.eventId())) {
+            log.warn("Ignoring duplicate webhook delivery for eventId={}", payload.eventId());
+            return ResponseEntity.ok().build();
+        }
+
+        eventPublisher.publishEvent(new PayoutStatusReceivedEvent(payload));
+        return ResponseEntity.ok().build();
     }
 }

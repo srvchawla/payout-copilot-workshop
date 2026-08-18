@@ -3,6 +3,8 @@ package com.payout.workshop.payout.webhook;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 /**
  * LAB TASK (Tier 1): make webhook processing idempotent using Redis.
  *
@@ -29,7 +31,10 @@ public class IdempotencyService {
     }
 
     public boolean tryAcquire(String eventId) {
-        throw new UnsupportedOperationException(
-                "TODO(workshop): implement atomic Redis-backed idempotency lock");
+        Boolean acquired = redisTemplate.opsForValue().setIfAbsent(
+                KEY_PREFIX + eventId,
+                "1",
+                Duration.ofHours(webhookProperties.getIdempotencyTtlHours()));
+        return Boolean.TRUE.equals(acquired);
     }
 }

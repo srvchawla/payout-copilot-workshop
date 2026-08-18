@@ -140,18 +140,49 @@ class WebhookControllerTest {
         });
     }
 
+    @Test
+    void pendingEventReturnsOkWithoutChangingBalance() throws Exception {
+        assertStatusDoesNotChangeBalance("PENDING");
+    }
+
+    @Test
+    void failedEventReturnsOkWithoutChangingBalance() throws Exception {
+        assertStatusDoesNotChangeBalance("FAILED");
+    }
+
+    private void assertStatusDoesNotChangeBalance(String status) throws Exception {
+        String eventId = "evt-" + status.toLowerCase() + "-" + Instant.now().toEpochMilli();
+        String body = payload(eventId, "acct-usd-1", "25.00", "USD", status);
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .header("Payout-Transmission-Sig", sign(body))
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isOk());
+
+        // Give the async listener a chance to (incorrectly) apply the payout.
+        await().during(Duration.ofSeconds(2)).atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
+            AccountBalance account = accountRepository.findByAccountId("acct-usd-1").orElseThrow();
+            assertThat(account.getBalance()).isEqualByComparingTo("100.0000");
+        });
+    }
+
     private String payload(String eventId, String accountId, String amount, String currency) {
+        return payload(eventId, accountId, amount, currency, "COMPLETED");
+    }
+
+    private String payload(String eventId, String accountId, String amount, String currency, String status) {
         return """
                 {
                   "eventId": "%s",
                   "payoutId": "payout-%s",
                   "accountId": "%s",
-                  "status": "COMPLETED",
+                  "status": "%s",
                   "amount": %s,
                   "currency": "%s",
                   "occurredAt": "%s"
                 }
-                """.formatted(eventId, eventId, accountId, amount, currency, Instant.now());
+                """.formatted(eventId, eventId, accountId, status, amount, currency, Instant.now());
     }
 
     private String sign(String body) throws Exception {
