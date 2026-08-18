@@ -85,6 +85,16 @@ class WebhookControllerTest {
     }
 
     @Test
+    void rejectsRequestWithMissingSignatureHeader() throws Exception {
+        String body = payload("evt-missing-sig", "acct-usd-1", "25.00", "USD");
+
+        mockMvc.perform(post("/webhooks/payout-status")
+                        .contentType("application/json")
+                        .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void acceptsValidSignatureAndCreditsBalance() throws Exception {
         String eventId = "evt-" + Instant.now().toEpochMilli();
         String body = payload(eventId, "acct-usd-1", "25.00", "USD");
