@@ -159,11 +159,30 @@ The lab is to make `./mvnw test` pass using Copilot Plan Mode, Custom
 Instructions, and Agent Mode — see
 [`docs/lab-guide.md`](docs/lab-guide.md).
 
+## Webhook metrics
+
+`WebhookMetrics` registers Micrometer counters for every webhook outcome. They
+are exposed through `/actuator/metrics/<name>`.
+
+| Metric name | Incremented when |
+| --- | --- |
+| `payout.webhook.accepted` | A webhook passed signature + idempotency checks and was handed off for processing |
+| `payout.webhook.invalid.signature` | A webhook was rejected with 401 because its signature was missing or invalid |
+| `payout.webhook.duplicate` | A webhook redelivered an event that was already processed or is in flight |
+| `payout.webhook.processing.completed` | Asynchronous processing of an accepted webhook finished successfully |
+| `payout.webhook.processing.failed` | Asynchronous processing of an accepted webhook failed |
+
+The counters carry no tags on purpose: account IDs, event IDs and payout IDs are
+unbounded, so tagging with them would explode metric cardinality and leak
+identifiers into the metrics backend. Use the application log for per-event
+detail.
+
 ## Repo Layout
 
 ```
 src/main/java/com/payout/workshop/payout/
   webhook/   WebhookController, SignatureVerifier, IdempotencyService, PayoutEventListener  (TODO stubs — the lab)
+             WebhookMetrics                                                                  (Micrometer counters, already implemented)
   ledger/    AccountBalance, AccountRepository, LedgerService                                (LedgerService is a TODO stub)
   fx/        ConversionService                                                               (fully implemented stub, not the lesson)
 .github/
