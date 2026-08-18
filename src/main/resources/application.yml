@@ -34,6 +34,11 @@ webhook:
   secret: ABCXYZ
   idempotency-ttl-hours: 24
 
+# Bounded retry for concurrent credits racing on AccountBalance's @Version column.
+ledger:
+  optimistic-lock:
+    max-attempts: 5
+
 logging:
   level:
     com.payout.workshop: DEBUG
