@@ -37,4 +37,4 @@ jobs:
           docker version
 
       - name: Run tests
-        run: ./mvnw --batch-mode --no-transfer-progress test
+        run: DOCKER_HOST="unix://$HOME/.rd/docker.sock" ./mvnw --batch-mode --no-transfer-progress test
