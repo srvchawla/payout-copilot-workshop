@@ -20,6 +20,7 @@
     <properties>
         <java.version>17</java.version>
         <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.docker.host>unix://${user.home}/.rd/docker.sock</testcontainers.docker.host>
     </properties>
 
     <dependencies>
@@ -105,7 +106,7 @@
                 <configuration>
                     <!-- Rancher Desktop's dockerd doesn't live at the default /var/run/docker.sock -->
                     <environmentVariables>
-                        <DOCKER_HOST>unix://${user.home}/.rd/docker.sock</DOCKER_HOST>
+                        <DOCKER_HOST>${testcontainers.docker.host}</DOCKER_HOST>
                         <!-- Ryuk can't bind-mount the host-side socket path into the Rancher VM; disable it -->
                         <TESTCONTAINERS_RYUK_DISABLED>true</TESTCONTAINERS_RYUK_DISABLED>
                     </environmentVariables>
