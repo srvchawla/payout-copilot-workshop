@@ -36,9 +36,13 @@ Request body:
 
 - `status` is one of `PENDING`, `COMPLETED`, `FAILED`; only `COMPLETED` moves
   the balance.
-- `amount` is a decimal number — it is parsed into a `BigDecimal`.
+- `amount` is parsed into a `BigDecimal`, so send it as a fixed-point decimal
+  (`25.00`). If your client library normalizes numbers (for example emitting
+  `25` or `2.5E+1`), send the amount as a JSON string (`"25.00"`) to preserve
+  the scale exactly.
 - `eventId` is the idempotency key: replaying the same `eventId` must never
-  move the balance twice.
+  move the balance twice. Every example below uses `evt-1001`; use a fresh
+  `eventId` whenever you intend a delivery to be processed as a new event.
 - If `currency` differs from the account currency, the amount is converted by
   `ConversionService` before the ledger is credited.
 
@@ -88,7 +92,7 @@ the signed bytes.
 The Bash commands run unchanged in zsh. Two habits keep them portable:
 
 ```zsh
-BODY='{"eventId":"evt-1002","payoutId":"payout-001","accountId":"acct-usd-1","status":"COMPLETED","amount":25.00,"currency":"USD","occurredAt":"2026-01-01T12:00:00Z"}'
+BODY='{"eventId":"evt-1001","payoutId":"payout-001","accountId":"acct-usd-1","status":"COMPLETED","amount":25.00,"currency":"USD","occurredAt":"2026-01-01T12:00:00Z"}'
 
 SIGNATURE="$(printf '%s' "$BODY" \
   | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" -binary \
@@ -110,7 +114,7 @@ curl -sS -i http://localhost:8080/webhooks/payout-status \
 ### PowerShell
 
 ```powershell
-$body = '{"eventId":"evt-1003","payoutId":"payout-001","accountId":"acct-usd-1","status":"COMPLETED","amount":25.00,"currency":"USD","occurredAt":"2026-01-01T12:00:00Z"}'
+$body = '{"eventId":"evt-1001","payoutId":"payout-001","accountId":"acct-usd-1","status":"COMPLETED","amount":25.00,"currency":"USD","occurredAt":"2026-01-01T12:00:00Z"}'
 
 $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
 $hmac = [System.Security.Cryptography.HMACSHA256]::new([System.Text.Encoding]::UTF8.GetBytes($env:WEBHOOK_SECRET))
@@ -184,7 +188,8 @@ the balance only once.
    Processing is asynchronous, so retry the query for a second or two before
    concluding the first delivery failed.
 
-4. Confirm the idempotency key exists in Redis (it carries the configured
+4. Confirm the idempotency key exists in Redis (substitute your own `eventId`
+   if you changed it; it carries the configured
    `webhook.idempotency-ttl-hours` TTL):
 
    ```bash
