@@ -90,7 +90,91 @@ Only rejectsRequestWithInvalidSignature is failing. Show me the current
 SignatureVerifier implementation and fix just that test.
 ```
 
-## 5. Debugging lab
+## 5. Verify the complete webhook flow manually
+
+Passing the automated tests proves the implementation behaves correctly in the
+Testcontainers environment. Now verify the complete workflow against the local
+development stack:
+
+```bash
+./scripts/manual-webhook-test.sh
+```
+
+Run this command from the repository root.
+
+> **Important:** The script restarts the local workshop stack. This removes the
+> current local Postgres and Redis containers and their data before creating a
+> clean environment. Do not run it against infrastructure containing data you
+> need to preserve.
+
+The script performs the following steps:
+
+1. Stops and recreates the local Postgres and Redis services.
+2. Builds and starts the Spring Boot application from the current source.
+3. Seeds `acct-manual-1` with a `100.0000 USD` balance.
+4. Creates a `COMPLETED` payout webhook for `25.00 USD`.
+5. Signs the exact raw JSON body using the configured webhook secret.
+6. Sends the webhook and waits for the asynchronous ledger update.
+7. Sends the same event again to simulate a duplicate delivery.
+8. Confirms that the duplicate does not credit the account twice.
+9. Confirms that Redis contains the event's idempotency key.
+10. Displays the final Postgres account row.
+
+Expected final output includes:
+
+```text
+OK   - first delivery changed the balance to 125.0000
+OK   - duplicate delivery left the balance at 125.0000
+OK   - Redis contains the idempotency key
+Manual webhook verification passed.
+```
+
+The final database row should show a balance of `125.0000` and a version of
+`1`. A version of `1` confirms that only the first delivery updated the row.
+
+### Why this step matters
+
+`WebhookControllerTest` uses temporary Testcontainers instances that are
+separate from the local development database and Redis service. A green test
+suite does not populate or verify the Compose services running on your machine.
+
+The manual script verifies the boundaries that the integration test alone does
+not make visible to the participant:
+
+- The packaged application starts successfully from the current source.
+- Spring Boot connects to the local Postgres and Redis services.
+- The sender and server calculate the same HMAC over the exact request body.
+- The controller acknowledges the request before asynchronous ledger work
+  completes.
+- The balance update is persisted in the local database.
+- Redis retains the idempotency key.
+- A real duplicate HTTP delivery is acknowledged but not applied twice.
+
+The application and its dependencies remain running after the script finishes.
+You can inspect the final account directly:
+
+```bash
+docker compose exec -T postgres psql \
+  -U workshop \
+  -d payout_workshop \
+  -c "SELECT account_id, currency, balance, version
+      FROM account_balance
+      WHERE account_id = 'acct-manual-1';"
+```
+
+Application logs are available at:
+
+```bash
+tail -f .run/payout-service.log
+```
+
+When you are finished, stop the local services gracefully:
+
+```bash
+./scripts/dev-down.sh
+```
+
+## 6. Debugging lab
 
 Once you're green, pick one:
 
