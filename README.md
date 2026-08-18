@@ -1,5 +1,9 @@
 # Payout Copilot Workshop — Payout Webhook Service
 
+[Open the interactive workshop](https://srvchawla.github.io/payout-copilot-workshop/#overview)
+
+[![Payout Webhook Lab overview](site/assets/workshop-overview.jpg)](https://srvchawla.github.io/payout-copilot-workshop/#overview)
+
 A hands-on GitHub Copilot workshop for backend engineers
 (Java 17 / Spring Boot 3) built around a realistic scenario: ingesting payout
 status webhooks securely and idempotently.
