@@ -31,7 +31,7 @@ jobs:
           cache: maven
 
       - name: Prepare Docker for Testcontainers
-        run: docker version
+        run: docker info
 
       - name: Run tests
         run: ./mvnw --batch-mode --no-transfer-progress -Dtestcontainers.docker.host=unix:///var/run/docker.sock test
